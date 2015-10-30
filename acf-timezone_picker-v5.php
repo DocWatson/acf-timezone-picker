@@ -84,12 +84,13 @@ class acf_field_timezone_picker extends acf_field {
                 $current_tz = new \DateTimeZone($tz);
                 $transition = $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
                 $abbr = $transition[0]['abbr'];
+                $is_selected = trim($field['value']) === trim($tz) ? ' selected="selected"' : '';
                 ?>
-                <option value="<?php echo $tz; ?> "><?php echo $tz . ' (' . $abbr . ')'; ?></option>
+                <option value="<?php echo $tz; ?>"<?php echo $is_selected;?>><?php echo $tz . ' (' . $abbr . ')'; ?></option>
             <?php } ?>
         </select>
     <?php
-	}
+    }
 }
 
 
