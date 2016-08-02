@@ -55,6 +55,40 @@ class acf_field_timezone_picker extends acf_field {
 	}
 
 
+/*
+	*  render_field_settings()
+	*
+	*  Create extra settings for your field. These are visible when editing a field
+	*
+	*  @type	action
+	*  @since	3.6
+	*  @date	23/01/13
+	*
+	*  @param	$field (array) the $field being edited
+	*  @return	n/a
+	*/
+	
+	function render_field_settings( $field ) {
+		
+		/*
+		*  acf_render_field_setting
+		*
+		*  This function will create a setting for your field. Simply pass the $field parameter and an array of field settings.
+		*  The array of settings does not require a `value` or `prefix`; These settings are found from the $field array.
+		*
+		*  More than one setting can be added by copy/paste the above code.
+		*  Please note that you must also have a matching $defaults value for the field name (font_size)
+		*/
+		
+		acf_render_field_setting( $field, array(
+			'label'			=> __('Default Timezone','acf-FIELD_NAME'),
+			'instructions'	=> __('e.g. Country/City (Australia/Sydney)','acf-FIELD_NAME'),
+			'type'			=> 'text',
+			'name'			=> 'default_time_zone',
+		));
+	}
+
+
 	/*
 	*  render_field()
 	*
@@ -77,6 +111,10 @@ class acf_field_timezone_picker extends acf_field {
         */
         $utc = new DateTimeZone('UTC');
         $dt = new DateTime('now', $utc);
+        $fieldValue = trim($field['value']);
+	if(!$fieldValue && $field['default_time_zone']){
+		$fieldValue = trim($field['default_time_zone']);
+	}
         ?>
         <select name="<?php echo esc_attr($field['name']) ?>">
             <?php
@@ -84,7 +122,7 @@ class acf_field_timezone_picker extends acf_field {
                 $current_tz = new \DateTimeZone($tz);
                 $transition = $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
                 $abbr = $transition[0]['abbr'];
-                $is_selected = trim($field['value']) === trim($tz) ? ' selected="selected"' : '';
+                $is_selected = $fieldValue === trim($tz) ? ' selected="selected"' : '';
                 ?>
                 <option value="<?php echo $tz; ?>"<?php echo $is_selected;?>><?php echo $tz . ' (' . $abbr . ')'; ?></option>
             <?php } ?>
