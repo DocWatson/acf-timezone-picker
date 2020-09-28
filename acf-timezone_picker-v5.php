@@ -118,7 +118,8 @@ class acf_field_timezone_picker extends acf_field {
         ?>
         <select name="<?php echo esc_attr($field['name']) ?>">
             <?php
-            foreach (\DateTimeZone::listIdentifiers() as $tz) {
+            $timezones = apply_filters( 'acf-timezone-picker-timezones', \DateTimeZone::listIdentifiers(), $field );
+            foreach ($timezones as $tz) {
                 $current_tz = new \DateTimeZone($tz);
                 $transition = $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
                 $abbr = $transition[0]['abbr'];
